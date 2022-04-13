@@ -18,6 +18,6 @@ public class MyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter writer =response.getWriter();
-        writer.write("Application 2 Response Generated");
+        writer.write("Hello Iam from HTTP Request Module");
     }
 }

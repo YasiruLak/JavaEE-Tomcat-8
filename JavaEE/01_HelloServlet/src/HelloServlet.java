@@ -14,7 +14,7 @@ import java.io.PrintWriter;
  * @year : 2022
  * @since : 0.1.0
  **/
-@WebServlet(urlPatterns = "/hello")
+@WebServlet(urlPatterns = "/server")
 public class HelloServlet extends HttpServlet {
 
     @Override
