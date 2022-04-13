@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="01_HelloServlet:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/01_HelloServlet_war_exploded</output-path>
-    <root id="root">
+  <artifact type="war" name="Servlet">
+    <output-path>$PROJECT_DIR$/out/artifacts/Servlet</output-path>
+    <root id="archive" name="Servlet.war">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="01_HelloServlet" />
