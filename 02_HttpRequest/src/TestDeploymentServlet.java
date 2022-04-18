@@ -17,7 +17,8 @@ public class TestDeploymentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Request Received");
         PrintWriter writer = resp.getWriter();
-        writer.write("");
+        writer.write("<h1 style=\"color:red\">Response Generated</h1>");
     }
 }
