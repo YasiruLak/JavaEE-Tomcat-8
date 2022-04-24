@@ -5,10 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * @author : Yasiru Dahanayaka
@@ -60,5 +57,26 @@ public class CustomerServlet extends HttpServlet {
         String customerSalary = req.getParameter("customerSalary");
 
         System.out.println(customerID+ " "+customerAddress+ " "+customerName+ " "+customerSalary);
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company","root", "19980611");
+            PreparedStatement pstm = connection.prepareStatement("Insert into Customer values(?,?,?,?)");
+            pstm.setObject(1, customerID);
+            pstm.setObject(2, customerName);
+            pstm.setObject(3, customerAddress);
+            pstm.setObject(4, customerSalary);
+
+            boolean b = pstm.executeUpdate() > 0 ;
+            PrintWriter writer = resp.getWriter();
+
+            if (b){
+                writer.write("Customer Added");
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
