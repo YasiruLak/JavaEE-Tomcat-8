@@ -67,7 +67,7 @@ public class CustomerServlet extends HttpServlet {
             pstm.setObject(3, customerAddress);
             pstm.setObject(4, customerSalary);
 
-            boolean b = pstm.executeUpdate() > 0 ;
+            boolean b = pstm.executeUpdate() > 0;
             PrintWriter writer = resp.getWriter();
 
             if (b){
