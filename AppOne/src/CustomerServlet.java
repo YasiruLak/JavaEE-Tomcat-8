@@ -51,4 +51,10 @@ public class CustomerServlet extends HttpServlet {
 
 
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        System.out.println("Customer Post Method Invoked");
+    }
 }
