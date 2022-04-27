@@ -32,7 +32,6 @@ public class CustomerServlets extends HttpServlet {
                 String name = resultSet.getString(2);
                 String address = resultSet.getString(3);
                 double salary = resultSet.getDouble(4);
-//                System.out.println(id + " " + name + " " + address + " " + salary);
 
                 String customer = "{\"id\":\"" + id + "\",\"name\":\"" + name + "\",\"address\":\"" + address + "\",\"salary\":" + salary + "},";
                 allRecords = allRecords + customer;
@@ -78,6 +77,31 @@ public class CustomerServlets extends HttpServlet {
 
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            resp.sendError(500, e.getMessage());
         }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String customerID = req.getParameter("cusID");
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection
+                    ("jdbc:mysql://localhost:3306/company", "root", "19980611");
+            PreparedStatement pstm = connection.prepareStatement("Delete from Customer where id=?");
+            pstm.setObject(1, customerID);
+
+            boolean b = pstm.executeUpdate() > 0;
+            PrintWriter writer = resp.getWriter();
+
+            if (b) {
+                writer.write("Customer Deleted");
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

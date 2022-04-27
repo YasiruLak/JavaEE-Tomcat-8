@@ -14,7 +14,7 @@
     <!--    customer save-->
     <div class="row mt-3">
         <div class="container-fluid mt-3">
-            <form action="customer" method="post">
+            <form id="customerForm">
                 <div class="row">
                     <div class="mb-3 col">
                         <label class="form-label" for="cusID">Customer ID</label>
@@ -80,6 +80,7 @@
 
     $("#btnGetAllCustomer").click(function () {
         loadAllCustomer();
+        alert("Done")
     });
 
     function loadAllCustomer() {
@@ -89,23 +90,22 @@
             method: "GET",
             // dataType:"json",
             success: function (resp) {
-                console.log(resp);
                 for (const customer of resp) {
                     let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
                     $("#tblCustomer").append(row);
                 }
-
             }
         });
     }
 
     $("#btnSaveCustomer").click(function () {
+        var data = $("#customerForm").serialize();
         $.ajax({
             url: "customer",
             method: "POST",
             data: data,// if we send data with the request
             success: function (res) {
-                alert(res);
+                alert("Save Success");
                 loadAllCustomer();
             },
             error: function (ob, textStatus, error) {
@@ -116,6 +116,21 @@
         });
     });
 
+
+    $("#btnDeleteCustomer").click(function () {
+        let customerID = $("#cusID").val();
+
+        $.ajax({
+            url: "customer?cusID=" + customerID,
+            method: "DELETE",
+            // data: customerID,
+
+            success: function (resp) {
+                alert("Deleted");
+                loadAllCustomer();
+            }
+        });
+    });
 
 </script>
 </body>
