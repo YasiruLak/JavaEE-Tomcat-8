@@ -29,7 +29,8 @@
                 <div class="row">
                     <div class="mb-3 col">
                         <label class="form-label" for="cusAddress">Customer Address</label>
-                        <input class="form-control" id="cusAddress" name="customerAddress" placeholder="Customer Address"
+                        <input class="form-control" id="cusAddress" name="customerAddress"
+                               placeholder="Customer Address"
                                type="text">
                     </div>
                     <div class="mb-3 col">
@@ -39,16 +40,17 @@
                     </div>
                 </div>
                 <div class="container-fluid mt-3">
-                    <button class="btn btn-primary" type="submit" id="btnSaveCustomer">Save Customer</button>
+                    <button class="btn btn-primary" id="btnSaveCustomer" type="button">Save Customer</button>
+                    <button class="btn btn-warning" id="btnUpdateCustomer" type="button">Update</button>
+                    <button class="btn btn-danger" id="btnDeleteCustomer" type="button">Delete</button>
+                    <button class="btn btn-success" id="btnGetAllCustomer">All Customers</button>
+
                 </div>
             </form>
         </div>
     </div>
 
     <div class="row mt-3">
-        <div class="col-2">
-            <button class="btn btn-success" id="btnCustomer">All Customers</button>
-        </div>
         <div class="col">
             <table class="table table-bordered table-hover">
                 <thead class="bg-success text-white">
@@ -72,39 +74,15 @@
     </div>
 </section>
 
-<section class="container mt-3">
-    <div class="row mt-3">
-        <div class="col-2">
-            <button class="btn btn-success" id="btnItem">All Items</button>
-        </div>
-        <div class="col">
-            <table class="table table-bordered table-hover">
-                <thead class="bg-success text-white">
-                <tr>
-                    <th>Item Code</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                </tr>
-                </thead>
-                <tbody id="tblItem">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
 
 <script src="assets/jQuery/jquery-3.6.0.min.js"></script>
 <script>
 
-    $("#btnCustomer").click(function () {
+    $("#btnGetAllCustomer").click(function () {
+        loadAllCustomer();
+    });
+
+    function loadAllCustomer() {
         $("#tblCustomer").empty();
         $.ajax({
             url: "customer",
@@ -119,35 +97,26 @@
 
             }
         });
-    });
+    }
 
-    $("#btnItem").click(function () {
-        $("#tblItem").empty();
+    $("#btnSaveCustomer").click(function () {
         $.ajax({
-            url: "item",
-            method: "GET",
-            // dataType:"json",
-            success: function (resp) {
-                console.log(resp);
-                for (const item of resp) {
-                    let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.price}</td></tr>`;
-                    $("#tblItem").append(row);
-                }
+            url: "customer",
+            method: "POST",
+            data: data,// if we send data with the request
+            success: function (res) {
+                alert(res);
+                loadAllCustomer();
+            },
+            error: function (ob, textStatus, error) {
+                alert(textStatus);
+                console.log(ob.responseText);
 
             }
         });
     });
 
-    // $("#btnSaveCustomer").click(function (){
-    //     $.ajax({
-    //         url: "customer",
-    //         method: "POST",
-    //
-    //         success: function (resp){
-    //
-    //         }
-    //     });
-    // });
+
 </script>
 </body>
 </html>

@@ -10,20 +10,21 @@ import java.sql.*;
 /**
  * @author : Yasiru Dahanayaka
  * @name : JavaEE-Tomcat-8
- * @date : 4/18/2022
+ * @date : 4/26/2022
  * @month : 04
  * @year : 2022
  * @since : 0.1.0
  **/
 @WebServlet(urlPatterns = "/customer")
-public class CustomerServlet extends HttpServlet {
+public class CustomerServlets extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
             resp.setContentType("application/json");
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "19980611");
+            Connection connection = DriverManager.getConnection
+                    ("jdbc:mysql://localhost:3306/company", "root", "19980611");
             ResultSet resultSet = connection.prepareStatement("select * from Customer").executeQuery();
             String allRecords = "";
             while (resultSet.next()) {
@@ -60,8 +61,9 @@ public class CustomerServlet extends HttpServlet {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/company", "root", "19980611");
-            PreparedStatement pstm = connection.prepareStatement("insert into Customer values(?,?,?,?)");
+            Connection connection = DriverManager.getConnection
+                    ("jdbc:mysql://localhost:3306/company", "root", "19980611");
+            PreparedStatement pstm = connection.prepareStatement("Insert into Customer values(?,?,?,?)");
             pstm.setObject(1, customerID);
             pstm.setObject(2, customerName);
             pstm.setObject(3, customerAddress);
@@ -77,6 +79,5 @@ public class CustomerServlet extends HttpServlet {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-
     }
 }

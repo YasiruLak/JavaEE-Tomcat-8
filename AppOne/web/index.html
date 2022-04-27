@@ -29,7 +29,8 @@
                 <div class="row">
                     <div class="mb-3 col">
                         <label class="form-label" for="cusAddress">Customer Address</label>
-                        <input class="form-control" id="cusAddress" name="customerAddress" placeholder="Customer Address"
+                        <input class="form-control" id="cusAddress" name="customerAddress"
+                               placeholder="Customer Address"
                                type="text">
                     </div>
                     <div class="mb-3 col">
@@ -39,7 +40,7 @@
                     </div>
                 </div>
                 <div class="container-fluid mt-3">
-                    <button class="btn btn-primary" type="submit" id="btnSaveCustomer">Save Customer</button>
+                    <button class="btn btn-primary" id="btnSaveCustomer" type="submit">Save Customer</button>
                 </div>
             </form>
         </div>
@@ -137,17 +138,7 @@
             }
         });
     });
-
-    // $("#btnSaveCustomer").click(function (){
-    //     $.ajax({
-    //         url: "customer",
-    //         method: "POST",
-    //
-    //         success: function (resp){
-    //
-    //         }
-    //     });
-    // });
+    
 </script>
 </body>
 </html>
