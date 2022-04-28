@@ -94,6 +94,7 @@
                     let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
                     $("#tblCustomer").append(row);
                 }
+                bindClickEvents();
             }
         });
     }
@@ -132,6 +133,41 @@
         });
     });
 
+    $("#btnUpdateCustomer").click(function () {
+        // let customerID = $("#cusID").val();
+        // let customerName = $("#cusName").val();
+        // let customerAddress = $("#cusAddress").val();
+        // let customerSalary = $("#cusSalary").val();
+
+        let formData = $("#customerForm").serialize();
+
+        $.ajax({
+            url: "customer?" + formData,
+            method: "PUT",
+            // data: formData,
+
+            success: function (resp) {
+                alert("Updated")
+                loadAllCustomer();
+            }
+
+        });
+    });
+
+    function bindClickEvents() {
+        $("#tblCustomer>tr").click(function () {
+            let id = $(this).children().eq(0).text();
+            let name = $(this).children().eq(1).text();
+            let address = $(this).children().eq(2).text();
+            let salary = $(this).children().eq(3).text();
+
+            //Set values to the text-fields
+            $("#cusID").val(id);
+            $("#cusName").val(name);
+            $("#cusAddress").val(address);
+            $("#cusSalary").val(salary);
+        });
+    }
 </script>
 </body>
 </html>
