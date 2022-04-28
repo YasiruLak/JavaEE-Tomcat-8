@@ -23,8 +23,8 @@ public class CustomerServlets extends HttpServlet {
         try {
             resp.setContentType("application/json");
 
-            resp.addHeader("Institute", "IJSE");
-            resp.addHeader("Course", "GDSE");
+//            resp.addHeader("Institute", "IJSE");
+//            resp.addHeader("Course", "GDSE");
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection

@@ -43,8 +43,7 @@
                     <button class="btn btn-primary" id="btnSaveCustomer" type="button">Save Customer</button>
                     <button class="btn btn-warning" id="btnUpdateCustomer" type="button">Update</button>
                     <button class="btn btn-danger" id="btnDeleteCustomer" type="button">Delete</button>
-                    <button class="btn btn-success" id="btnGetAllCustomer">All Customers</button>
-
+                    <button class="btn btn-success" id="btnGetAllCustomer">Get All</button>
                 </div>
             </form>
         </div>
@@ -80,7 +79,7 @@
 
     $("#btnGetAllCustomer").click(function () {
         loadAllCustomer();
-        alert("Done")
+        // alert("Done")
     });
 
     function loadAllCustomer() {
@@ -90,6 +89,7 @@
             method: "GET",
             // dataType:"json",
             success: function (resp) {
+                console.log(typeof resp);
                 for (const customer of resp) {
                     let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
                     $("#tblCustomer").append(row);
