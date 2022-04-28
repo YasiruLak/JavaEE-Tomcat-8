@@ -1,5 +1,7 @@
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +23,17 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        ServletInputStream stream = req.getInputStream();
+//        ServletInputStream stream = req.getInputStream();
+//
+//        int read;
+//
+//        while ((read = stream.read()) != -1) {
+//            System.out.print((char) read);
+//        }
 
-        int read;
-
-        while ((read = stream.read()) != -1) {
-            System.out.print((char) read);
-        }
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
+        String id = jsonObject.getString("id");
+        System.out.println(id);
     }
 }
