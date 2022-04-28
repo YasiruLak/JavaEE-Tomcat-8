@@ -1,7 +1,4 @@
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
+import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +24,22 @@ public class JsonServlet extends HttpServlet {
 
         resp.setContentType("application/json");
 
+//        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+//
+//        objectBuilder.add("id", "C001");
+//        objectBuilder.add("name", "yasiru");
+//        objectBuilder.add("address", "Galle");
+//        objectBuilder.add("salary", 1000.00);
+//
+//        JsonObject build = objectBuilder.build();
+//
+//
+//        PrintWriter writer = resp.getWriter();
+//        writer.println(build);
+
+
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         objectBuilder.add("id", "C001");
@@ -34,11 +47,21 @@ public class JsonServlet extends HttpServlet {
         objectBuilder.add("address", "Galle");
         objectBuilder.add("salary", 1000.00);
 
-        JsonObject build = objectBuilder.build();
+        JsonObjectBuilder objectBuilder2 = Json.createObjectBuilder();
 
+        objectBuilder2.add("id", "C002");
+        objectBuilder2.add("name", "Amal");
+        objectBuilder2.add("address", "Galle");
+        objectBuilder2.add("salary", 2000.00);
+
+        arrayBuilder.add(objectBuilder.build());
+        arrayBuilder.add(objectBuilder2.build());
 
         PrintWriter writer = resp.getWriter();
-        writer.println(build);
+
+        writer.print(arrayBuilder.build());
+
+
     }
 
     @Override
