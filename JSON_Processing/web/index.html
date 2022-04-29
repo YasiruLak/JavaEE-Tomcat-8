@@ -89,8 +89,7 @@
             method: "GET",
             // dataType:"json",
             success: function (resp) {
-                console.log(typeof resp);
-                for (const customer of resp) {
+                for (const customer of resp.data) {
                     let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
                     $("#tblCustomer").append(row);
                 }
