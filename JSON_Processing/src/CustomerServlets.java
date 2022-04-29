@@ -72,7 +72,7 @@ public class CustomerServlets extends HttpServlet {
         String customerAddress = req.getParameter("customerAddress");
         String customerSalary = req.getParameter("customerSalary");
 
-        System.out.println(customerID + " " + customerAddress + " " + customerName + " " + customerSalary);
+        PrintWriter writer = resp.getWriter();
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -84,18 +84,32 @@ public class CustomerServlets extends HttpServlet {
             pstm.setObject(3, customerAddress);
             pstm.setObject(4, customerSalary);
 
-            boolean b = pstm.executeUpdate() > 0;
-            PrintWriter writer = resp.getWriter();
 
-            if (b) {
-                writer.write("Customer Added");
+            if (pstm.executeUpdate() > 0) {
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                response.add("status", 200);
+                response.add("message", "Added");
+                response.add("data", "");
+                writer.print(response.build());
             }
 
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException e) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 500);
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            writer.print(response.build());
             e.printStackTrace();
-            resp.sendError(500, e.getMessage());
+        } catch (SQLException throwables) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 500);
+            response.add("message", "Error");
+            response.add("data", throwables.getLocalizedMessage());
+            writer.print(response.build());
+            throwables.printStackTrace();
         }
     }
+
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

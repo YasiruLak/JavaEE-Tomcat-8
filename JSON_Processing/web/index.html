@@ -82,21 +82,6 @@
         // alert("Done")
     });
 
-    function loadAllCustomer() {
-        $("#tblCustomer").empty();
-        $.ajax({
-            url: "customer",
-            method: "GET",
-            // dataType:"json",
-            success: function (resp) {
-                for (const customer of resp.data) {
-                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
-                    $("#tblCustomer").append(row);
-                }
-                bindClickEvents();
-            }
-        });
-    }
 
     $("#btnSaveCustomer").click(function () {
         var data = $("#customerForm").serialize();
@@ -116,7 +101,6 @@
         });
     });
 
-
     $("#btnDeleteCustomer").click(function () {
         let customerID = $("#cusID").val();
 
@@ -131,8 +115,6 @@
             }
         });
     });
-
-    loadAllCustomer();
 
     $("#btnUpdateCustomer").click(function () {
 
@@ -150,6 +132,25 @@
 
         });
     });
+
+    loadAllCustomer();
+
+    function loadAllCustomer() {
+        $("#tblCustomer").empty();
+        $.ajax({
+            url: "customer",
+            method: "GET",
+            // dataType:"json",
+            success: function (resp) {
+                for (const customer of resp.data) {
+                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
+                    $("#tblCustomer").append(row);
+                }
+                bindClickEvents();
+            }
+        });
+    }
+    
 
     function bindClickEvents() {
         $("#tblCustomer>tr").click(function () {
