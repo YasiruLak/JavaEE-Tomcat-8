@@ -16,7 +16,7 @@ import java.io.PrintWriter;
  * @since : 0.1.0
  **/
 
-@WebServlet(urlPatterns = "/customer")
+@WebServlet(urlPatterns = "/json")
 public class JsonServlet extends HttpServlet {
 
     @Override

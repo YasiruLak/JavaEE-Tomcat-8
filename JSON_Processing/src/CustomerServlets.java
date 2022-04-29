@@ -1,3 +1,6 @@
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,28 +26,31 @@ public class CustomerServlets extends HttpServlet {
         try {
             resp.setContentType("application/json");
 
-//            resp.addHeader("Institute", "IJSE");
-//            resp.addHeader("Course", "GDSE");
-
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection
                     ("jdbc:mysql://localhost:3306/company", "root", "19980611");
-            ResultSet resultSet = connection.prepareStatement("Select * from Customer").executeQuery();
-            String allRecords = "";
+            ResultSet resultSet = connection.prepareStatement("select * from Customer").executeQuery();
+
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
             while (resultSet.next()) {
                 String id = resultSet.getString(1);
                 String name = resultSet.getString(2);
                 String address = resultSet.getString(3);
                 double salary = resultSet.getDouble(4);
 
-                String customer = "{\"id\":\"" + id + "\",\"name\":\"" + name + "\",\"address\":\"" + address + "\",\"salary\":" + salary + "},";
-                allRecords = allRecords + customer;
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("id", id);
+                objectBuilder.add("name", name);
+                objectBuilder.add("address", address);
+                objectBuilder.add("salary", salary);
+
+                arrayBuilder.add(objectBuilder.build());
+
             }
 
-            String finalJson = "[" + allRecords.substring(0, allRecords.length() - 1) + "]";
-
             PrintWriter writer = resp.getWriter();
-            writer.write(finalJson);
+            writer.print(arrayBuilder.build());
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
