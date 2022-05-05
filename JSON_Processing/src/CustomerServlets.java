@@ -73,6 +73,7 @@ public class CustomerServlets extends HttpServlet {
         String customerSalary = req.getParameter("customerSalary");
 
         PrintWriter writer = resp.getWriter();
+        resp.setContentType("application/json");
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -89,28 +90,28 @@ public class CustomerServlets extends HttpServlet {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);
                 response.add("status", 200);
-                response.add("message", "Added");
+                response.add("message", "Successfully Added");
                 response.add("data", "");
                 writer.print(response.build());
             }
 
         } catch (ClassNotFoundException e) {
             JsonObjectBuilder response = Json.createObjectBuilder();
-            response.add("status", 500);
+            response.add("status", 400);
             response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.setStatus(HttpServletResponse.SC_OK);
             e.printStackTrace();
         } catch (SQLException throwables) {
             JsonObjectBuilder response = Json.createObjectBuilder();
-            response.add("status", 500);
+            response.add("status", 400);
             response.add("message", "Error");
             response.add("data", throwables.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.setStatus(HttpServletResponse.SC_OK);
             throwables.printStackTrace();
         }
     }

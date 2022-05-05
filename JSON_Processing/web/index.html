@@ -90,12 +90,17 @@
             method: "POST",
             data: data,// if we send data with the request
             success: function (res) {
-                alert("Save Success");
-                loadAllCustomer();
+                if (res.status == 200) {
+                    alert(res.message);
+                    loadAllCustomer();
+                } else {
+                    alert(res.data);
+                }
             },
             error: function (ob, textStatus, error) {
-                alert(textStatus);
-                console.log(ob.responseText);
+                console.log(ob);
+                console.log(textStatus);
+                console.log(error);
 
             }
         });
@@ -150,7 +155,7 @@
             }
         });
     }
-    
+
 
     function bindClickEvents() {
         $("#tblCustomer>tr").click(function () {
