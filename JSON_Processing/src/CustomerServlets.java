@@ -22,39 +22,48 @@ public class CustomerServlets extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
+            String option = req.getParameter("option");
+
             resp.setContentType("application/json");
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection
                     ("jdbc:mysql://localhost:3306/company", "root", "19980611");
-            ResultSet resultSet = connection.prepareStatement("select * from Customer").executeQuery();
-
-            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-
-            while (resultSet.next()) {
-                String id = resultSet.getString(1);
-                String name = resultSet.getString(2);
-                String address = resultSet.getString(3);
-                double salary = resultSet.getDouble(4);
-
-                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("id", id);
-                objectBuilder.add("name", name);
-                objectBuilder.add("address", address);
-                objectBuilder.add("salary", salary);
-
-                arrayBuilder.add(objectBuilder.build());
-
-            }
-
             PrintWriter writer = resp.getWriter();
 
-            JsonObjectBuilder response = Json.createObjectBuilder();
-            response.add("status", 200);
-            response.add("message", "Done");
-            response.add("data", arrayBuilder.build());
+            switch (option) {
+                case "SEARCH":
 
-            writer.print(response.build());
+                    break;
+
+                case "GETALL":
+                    ResultSet resultSet = connection.prepareStatement("select * from Customer").executeQuery();
+
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+                    while (resultSet.next()) {
+                        String id = resultSet.getString(1);
+                        String name = resultSet.getString(2);
+                        String address = resultSet.getString(3);
+                        double salary = resultSet.getDouble(4);
+
+                        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                        objectBuilder.add("id", id);
+                        objectBuilder.add("name", name);
+                        objectBuilder.add("address", address);
+                        objectBuilder.add("salary", salary);
+
+                        arrayBuilder.add(objectBuilder.build());
+
+                    }
+
+                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    response.add("status", 200);
+                    response.add("message", "Done");
+                    response.add("data", arrayBuilder.build());
+                    writer.print(response.build());
+                    break;
+            }
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

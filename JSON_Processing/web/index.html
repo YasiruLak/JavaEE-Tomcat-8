@@ -170,7 +170,7 @@
     function loadAllCustomer() {
         $("#tblCustomer").empty();
         $.ajax({
-            url: "customer",
+            url: "customer?option=GETALL",
             method: "GET",
             // dataType:"json",
             success: function (resp) {
