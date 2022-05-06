@@ -121,6 +121,9 @@ public class CustomerServlets extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String customerID = req.getParameter("cusID");
+        PrintWriter writer = resp.getWriter();
+        resp.setContentType("application/json");
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = DriverManager.getConnection
@@ -128,15 +131,42 @@ public class CustomerServlets extends HttpServlet {
             PreparedStatement pstm = connection.prepareStatement("Delete from Customer where id=?");
             pstm.setObject(1, customerID);
 
-            boolean b = pstm.executeUpdate() > 0;
-            PrintWriter writer = resp.getWriter();
+            if (pstm.executeUpdate() > 0) {
 
-            if (b) {
-                writer.write("Customer Deleted");
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("status", 200);
+                objectBuilder.add("data", "");
+                objectBuilder.add("message", "Successfully Deleted");
+                writer.print(objectBuilder.build());
+
+            } else {
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("status", 400);
+                objectBuilder.add("data", "Wrong Id Inserted");
+                objectBuilder.add("message", "");
+                writer.print(objectBuilder.build());
             }
 
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
+
+            resp.setStatus(200);
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("status", 500);
+            objectBuilder.add("message", "Error");
+            objectBuilder.add("data", e.getLocalizedMessage());
+            writer.print(objectBuilder.build());
+
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+
+            resp.setStatus(200);
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            objectBuilder.add("status", 500);
+            objectBuilder.add("message", "Error");
+            objectBuilder.add("data", throwables.getLocalizedMessage());
+            writer.print(objectBuilder.build());
         }
 
     }

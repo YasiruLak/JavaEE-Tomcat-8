@@ -115,8 +115,20 @@
             // data: customerID,
 
             success: function (resp) {
-                alert("Deleted");
-                loadAllCustomer();
+                if (resp.status == 200) {
+                    alert(resp.message);
+                    loadAllCustomer();
+                } else if (resp.status == 400) {
+                    alert(resp.data);
+                } else {
+                    alert(resp.data);
+                }
+
+            },
+            error: function (ob, status, t) {
+                console.log(ob);
+                console.log(status);
+                console.log(t);
             }
         });
     });
