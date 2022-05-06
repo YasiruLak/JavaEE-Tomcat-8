@@ -135,18 +135,33 @@
 
     $("#btnUpdateCustomer").click(function () {
 
-        let formData = $("#customerForm").serialize();
+        var cusOb = {
+            id: $("#cusID").val(),
+            name: $("#cusName").val(),
+            address: $("#cusAddress").val(),
+            salary: $("#cusSalary").val()
+        }
 
         $.ajax({
-            url: "customer?" + formData,
+            url: "customer",
             method: "PUT",
-            // data: formData,
+            contentType: "application/json",
+            data: JSON.stringify(cusOb),
 
             success: function (resp) {
-                alert("Updated")
-                loadAllCustomer();
-            }
+                if (resp.status == 200) {
+                    alert(resp.message);
+                    loadAllCustomer();
+                } else if (resp.status == 400) {
+                    alert(resp.message);
+                } else {
+                    alert(resp.data);
+                }
 
+            },
+            error: function (ob, errorStatus) {
+                console.log(ob);
+            }
         });
     });
 
