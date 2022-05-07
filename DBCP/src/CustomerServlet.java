@@ -28,9 +28,9 @@ public class CustomerServlet extends HttpServlet {
 
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        basicDataSource.setUrl("jdbc:mysql://localhost:3306/company");
         basicDataSource.setUsername("root");
         basicDataSource.setPassword("19980611");
-        basicDataSource.setUrl("jdbc:mysql://localhost:3306/company");
         basicDataSource.setMaxTotal(5);
         basicDataSource.setInitialSize(5);
 
@@ -43,6 +43,7 @@ public class CustomerServlet extends HttpServlet {
                 String id = resultSet.getString(1);
                 System.out.println(id);
             }
+            connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
