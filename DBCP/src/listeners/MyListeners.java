@@ -6,6 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.sql.SQLException;
 
 /**
  * @author : Yasiru Dahanayaka
@@ -37,5 +38,15 @@ public class MyListeners implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         System.out.println("Context Destroyed");
+
+        try {
+
+            ServletContext servletContext = servletContextEvent.getServletContext();
+            BasicDataSource basicDataSource = (BasicDataSource) servletContext.getAttribute("basicDataSource");
+            basicDataSource.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
