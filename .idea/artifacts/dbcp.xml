@@ -7,9 +7,9 @@
           <element id="module-output" name="DBCP" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="commons-pool2-2.11.1" />
           <element id="library" level="project" name="javax.json-api-1.1.4" />
           <element id="library" level="project" name="mysql-connector-java-8.0.25" />
-          <element id="library" level="project" name="commons-pool2-2.11.1" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="DBCP/web/Web" />

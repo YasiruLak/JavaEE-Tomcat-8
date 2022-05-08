@@ -1,5 +1,6 @@
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +35,9 @@ public class CustomerServlet extends HttpServlet {
         basicDataSource.setMaxTotal(5);
         basicDataSource.setInitialSize(5);
 
+        ServletContext servletContext = req.getServletContext();
+        servletContext.setAttribute("basicDataSource", basicDataSource);
+
         try {
             Connection connection = basicDataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("Select * from Customer");
@@ -48,5 +52,27 @@ public class CustomerServlet extends HttpServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        ServletContext servletContext = req.getServletContext();
+        BasicDataSource basicDataSource = (BasicDataSource) servletContext.getAttribute("basicDataSource");
+
+        try {
+            Connection connection = basicDataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from Customer");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String id = resultSet.getString(1);
+                System.out.println(id);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
