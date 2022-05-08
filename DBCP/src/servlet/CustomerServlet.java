@@ -29,16 +29,8 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        basicDataSource.setUrl("jdbc:mysql://localhost:3306/company");
-        basicDataSource.setUsername("root");
-        basicDataSource.setPassword("19980611");
-        basicDataSource.setMaxTotal(5);
-        basicDataSource.setInitialSize(5);
-
         ServletContext servletContext = req.getServletContext();
-        servletContext.setAttribute("basicDataSource", basicDataSource);
+        BasicDataSource basicDataSource = (BasicDataSource) servletContext.getAttribute("basicDataSource");
 
         try {
             Connection connection = basicDataSource.getConnection();
