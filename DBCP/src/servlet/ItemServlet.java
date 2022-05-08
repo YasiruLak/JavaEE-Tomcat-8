@@ -40,6 +40,7 @@ public class ItemServlet extends HttpServlet {
             while (resultSet.next()) {
                 System.out.println(resultSet.getString(1));
             }
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

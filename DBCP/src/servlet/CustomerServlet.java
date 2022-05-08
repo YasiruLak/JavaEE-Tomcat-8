@@ -63,6 +63,7 @@ public class CustomerServlet extends HttpServlet {
                 String id = resultSet.getString(1);
                 System.out.println(id);
             }
+            connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
