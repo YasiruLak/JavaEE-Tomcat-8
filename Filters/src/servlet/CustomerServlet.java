@@ -18,41 +18,42 @@ import java.sql.SQLException;
 /**
  * @author : Yasiru Dahanayaka
  * @name : JavaEE-Tomcat-8
- * @date : 5/8/2022
+ * @date : 5/12/2022
  * @month : 05
  * @year : 2022
  * @since : 0.1.0
  **/
-
 @WebServlet(urlPatterns = "/customer")
 public class CustomerServlet extends HttpServlet {
 
     @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource dataSource;
+    DataSource ds;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Request Received from Customer");
         try {
-
             String option = req.getParameter("option");
             resp.setContentType("application/json");
-            Connection connection = dataSource.getConnection();
+            Connection connection = ds.getConnection();
             PrintWriter writer = resp.getWriter();
+
+            resp.addHeader("Access-Control-Allow-Origin", "*");
+
+
             switch (option) {
                 case "SEARCH":
+                    //write the code for customer search
 
                     break;
-
                 case "GETALL":
-                    PreparedStatement preparedStatement = connection.prepareStatement("select * from Customer");
-                    ResultSet resultSet = preparedStatement.executeQuery();
-                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-
-                    while (resultSet.next()) {
-                        String id = resultSet.getString(1);
-                        String name = resultSet.getString(2);
-                        String address = resultSet.getString(3);
-                        double salary = resultSet.getDouble(4);
+                    ResultSet rst = connection.prepareStatement("select * from Customer").executeQuery();
+                    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder(); // json array
+                    while (rst.next()) {
+                        String id = rst.getString(1);
+                        String name = rst.getString(2);
+                        String address = rst.getString(3);
+                        double salary = rst.getDouble(4);
 
                         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
                         objectBuilder.add("id", id);
@@ -61,6 +62,7 @@ public class CustomerServlet extends HttpServlet {
                         objectBuilder.add("salary", salary);
                         arrayBuilder.add(objectBuilder.build());
                     }
+
                     JsonObjectBuilder response = Json.createObjectBuilder();
                     response.add("status", 200);
                     response.add("message", "Done");
@@ -70,8 +72,8 @@ public class CustomerServlet extends HttpServlet {
             }
             connection.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
 
     }
@@ -81,58 +83,54 @@ public class CustomerServlet extends HttpServlet {
         String customerID = req.getParameter("customerID");
         String customerName = req.getParameter("customerName");
         String customerAddress = req.getParameter("customerAddress");
-        String customerSalary = req.getParameter("customerSalary");
+        String salary = req.getParameter("customerSalary");
+
+        resp.addHeader("Access-Control-Allow-Origin", "*");
 
         PrintWriter writer = resp.getWriter();
         resp.setContentType("application/json");
-
         try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("Insert into Customer values(?,?,?,?)");
-            preparedStatement.setObject(1, customerID);
-            preparedStatement.setObject(2, customerName);
-            preparedStatement.setObject(3, customerAddress);
-            preparedStatement.setObject(4, customerSalary);
+            Connection connection = ds.getConnection();
+            PreparedStatement pstm = connection.prepareStatement("Insert into Customer values(?,?,?,?)");
+            pstm.setObject(1, customerID);
+            pstm.setObject(2, customerName);
+            pstm.setObject(3, customerAddress);
+            pstm.setObject(4, salary);
 
-            if (preparedStatement.executeUpdate() > 0) {
+            if (pstm.executeUpdate() > 0) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-
+                resp.setStatus(HttpServletResponse.SC_CREATED);//201
                 response.add("status", 200);
                 response.add("message", "Successfully Added");
                 response.add("data", "");
                 writer.print(response.build());
             }
-
             connection.close();
-
-        } catch (SQLException e) {
-
+        } catch (SQLException throwables) {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add("status", 400);
             response.add("message", "Error");
-            response.add("data", e.getLocalizedMessage());
+            response.add("data", throwables.getLocalizedMessage());
             writer.print(response.build());
-            resp.setStatus(HttpServletResponse.SC_OK);
-
-            e.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_OK); //200
+            throwables.printStackTrace();
         }
-
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         String customerID = req.getParameter("CusID");
         PrintWriter writer = resp.getWriter();
         resp.setContentType("application/json");
 
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("Delete from Customer where id=?");
-            preparedStatement.setObject(1, customerID);
+        resp.addHeader("Access-Control-Allow-Origin", "*");
 
-            if (preparedStatement.executeUpdate() > 0) {
+        try {
+            Connection connection = ds.getConnection();
+            PreparedStatement pstm = connection.prepareStatement("Delete from Customer where id=?");
+            pstm.setObject(1, customerID);
+
+            if (pstm.executeUpdate() > 0) {
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
                 objectBuilder.add("status", 200);
                 objectBuilder.add("data", "");
@@ -147,16 +145,15 @@ public class CustomerServlet extends HttpServlet {
             }
             connection.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException throwables) {
             resp.setStatus(200);
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("status", 500);
             objectBuilder.add("message", "Error");
-            objectBuilder.add("data", e.getLocalizedMessage());
+            objectBuilder.add("data", throwables.getLocalizedMessage());
             writer.print(objectBuilder.build());
-
-            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -164,7 +161,6 @@ public class CustomerServlet extends HttpServlet {
 
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
-
         String customerID = jsonObject.getString("id");
         String customerName = jsonObject.getString("name");
         String customerAddress = jsonObject.getString("address");
@@ -172,16 +168,16 @@ public class CustomerServlet extends HttpServlet {
         PrintWriter writer = resp.getWriter();
         resp.setContentType("application/json");
 
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement
-                    ("Update Customer set name=?,address=?,salary=? where id=?");
-            preparedStatement.setObject(1, customerName);
-            preparedStatement.setObject(2, customerAddress);
-            preparedStatement.setObject(3, customerSalary);
-            preparedStatement.setObject(4, customerID);
+        resp.addHeader("Access-Control-Allow-Origin", "*");
 
-            if (preparedStatement.executeUpdate() > 0) {
+        try {
+            Connection connection = ds.getConnection();
+            PreparedStatement pstm = connection.prepareStatement("Update Customer set name=?,address=?,salary=? where id=?");
+            pstm.setObject(1, customerName);
+            pstm.setObject(2, customerAddress);
+            pstm.setObject(3, customerSalary);
+            pstm.setObject(4, customerID);
+            if (pstm.executeUpdate() > 0) {
                 JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
                 objectBuilder.add("status", 200);
                 objectBuilder.add("message", "Successfully Updated");
@@ -194,16 +190,22 @@ public class CustomerServlet extends HttpServlet {
                 objectBuilder.add("data", "");
                 writer.print(objectBuilder.build());
             }
-
             connection.close();
-
-        } catch (SQLException e) {
+        } catch (SQLException throwables) {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("status", 500);
             objectBuilder.add("message", "Update Failed");
-            objectBuilder.add("data", e.getLocalizedMessage());
+            objectBuilder.add("data", throwables.getLocalizedMessage());
             writer.print(objectBuilder.build());
-            e.printStackTrace();
         }
+    }
+
+
+    //Invoke by doDelete and doPut method to verify that server is supporting CORS origin requests
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Access-Control-Allow-Methods", "DELETE, PUT");
+        resp.addHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 }
