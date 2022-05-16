@@ -1,7 +1,9 @@
-package filters;
+package filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -13,8 +15,7 @@ import java.io.PrintWriter;
  * @year : 2022
  * @since : 0.1.0
  **/
-//@WebFilter(urlPatterns = {"/customer","/item","/order"}) // filter only these servlets
-@WebFilter(urlPatterns = "/*") //filter all requests
+@WebFilter(urlPatterns = "/*")
 public class MyFilter implements Filter {
 
     public MyFilter() {
@@ -28,22 +29,21 @@ public class MyFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        //Before the request send
+
+        HttpServletRequest req = (HttpServletRequest) servletRequest;
+        HttpServletResponse res = (HttpServletResponse) servletResponse;
+
         System.out.println("First");
 
 
-        // without this line the request will not proceed to the servlet
-        filterChain.doFilter(servletRequest, servletResponse); // proceed request to the servlet
+        filterChain.doFilter(servletRequest, servletResponse);
 
         PrintWriter writer = servletResponse.getWriter();
         writer.write("Added from MyFilter");
 
 
-        //
-        servletResponse.addHeader("MyCompany", "IJSE");
+        res.addHeader("MyCompany", "IJSE");
 
-
-        //After the servlet response
         System.out.println("Second");
     }
 
